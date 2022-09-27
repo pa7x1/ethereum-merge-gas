@@ -1,0 +1,10 @@
+requests
+opnieuw
+ratelimit
+tqdm
+aiohttp
+aiofiles
+pandas
+matplotlib
+plotly
+tabulate
