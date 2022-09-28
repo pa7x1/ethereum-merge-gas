@@ -24,7 +24,7 @@ df['averageBlocktimeEMA30'] = df['averageBlocktime'].ewm(span=30).mean()
 df['blockTimeGrowth'] = df['averageBlocktime'] - df['averageBlocktimeEMA30']
 
 fig = px.scatter(x=df['blockTimeGrowth'], y=df['baseFeePerGasGrowth'], marginal_x="violin", marginal_y="violin",
-                 title="Ethereum Proof of Work - Base Fee Price Change vs Block Time Change")
+                 title="Ethereum Proof of Stake - Base Fee Price Change vs Block Time Change")
 fig.update_xaxes(title_text='Change in Average Block Time (\u0394s)')
 fig.update_yaxes(title_text="Change in Base Fee Price (\u0394GWei)")
 fig.show()
