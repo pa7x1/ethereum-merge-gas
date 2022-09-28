@@ -52,7 +52,7 @@ it. Dying demand doesn't seem to be the culprit.
 
 ## Block Production under Proof of Work
 
-A few days after the merge I especulated in a post in [/r/ethfinance](https://np.reddit.com/r/ethfinance/comments/xh7km4/daily_general_discussion_september_18_2022/ioz8rau/)
+A few days after the merge I speculated in a post in [/r/ethfinance](https://np.reddit.com/r/ethfinance/comments/xh7km4/daily_general_discussion_september_18_2022/ioz8rau/)
 that a possible reason behind the drop in fees was a subtle change introduced by the merge. Under Proof of Stake every 
 12 seconds a random validator of the network has the responsiblity of producing a block. Every 12 seconds, like a swiss clock.
 But a Proof of Work blockchain doesn't have the luxury of producing blocks so regularly. Instead, it relies on solving a 
@@ -60,7 +60,7 @@ cryptographic puzzle whose difficulty is dynamically
 adjusted to average out certain cadence of block production. In the days before the merge, Ethereum was roughly averaging
 14 seconds per block. The process of solving the cryptographic puzzle to create the next block is a Poisson process and
 follows (for fixed difficulty) the aptly named Poisson probability distribution. Here is the empirical probability distribution measured during
-the last 10 days of PoW.
+the last 10 days of Proof of Work (PoW).
 
 ![](./static/images/PoW_BlockTime_Histogram.png)
 
@@ -100,7 +100,8 @@ and blocks contract again.
 
 The hypothesis is that block delays result in pent-up demand for blockspace which result in EIP-1559 targeting enlarged
 blocks but also raising the price of gas. A block that arrives at 28 seconds is effectively equivalent to a missed block, 
-so it's more likely to saturate the maximum blocksize allowed by EIP-1559. Imagine what happens when 5% of blocks arrive after
+so under typical demand conditions it's more likely to saturate the maximum blocksize allowed by EIP-1559. 
+Imagine what happens when 5% of blocks arrive after
 42 seconds, and you have the occasional 175 second delay. The other side of the coin is that we also have some blocks
 arriving much faster, these should result in a lowering of gas prices as they are less likely to be filled. Unfortunately
 gas prices are bounded from below (can't go lower than 0) but they are not from above, so block delays can skew gas prices 
@@ -126,18 +127,21 @@ validators not operational. The block time histogram looks as follows:
 
 ![](./static/images/PoS_BlockTime_Histogram.png)
 
-Close to 99% of the blocks during the first 10 days were produced in exactly 12 seconds, the other 1% amount for 1 miss
+Close to 99% of the blocks during the first 10 days were produced in exactly 12 seconds, the other 1% amount for 1 miss or 
 2 consecutive misses. That's a very consistent block production rate. We should expect the effect described above to be
-negligible in PoS when the network operates at such a high rate of participation as we have observed.
+negligible in Proof of Stake when the network operates at such a high rate of participation as we have observed.
 
 ## Measuring the Impact of Delayed Blocks in Gas Fees
 
 We have a simple target in mind; measure the relation, if any, a change in blocktimes over certain period
 of time has with changes in gas prices. We should expect a positive correlation between the change in block times and the
-change in gas prices.
+change in gas prices, if the hypothesis laid above is correct.
 
-To calculate the change in block times we can take a simple moving moving average of blocktimes (i.e. the average blocktime
-over the last n periods) and calculate its rate of change. The rate of change can be estimated by a difference between
+To calculate the change in block times we can take a simple moving average of blocktimes (i.e. the average blocktime
+over the last n periods) and calculate its rate of change. We calculate the average to smooth out the effect over a few 
+minutes. It's less likely to have noticeable impact by a single slighlty delayed block but if over the span of 5 minutes
+we have a significant delay or speed-up in blocks we should notice it with an increase (resp. decrease) in gas prices.
+The rate of change can be estimated by taking the difference between
 the data itself and a longer term exponential moving average. The longer term exponential moving average reacts slower to changes,
 so if average blocktime is trending up the difference will become positive, if blocktimes are trending down it will become 
 negative.
@@ -190,13 +194,13 @@ we could see the correlation pick-up.
 
 Despite the generally held believe that The Merge wouldn't have an impact on gas fees, the contrary has been seen 
 empirically. We have shown that the inconsistent block production under Proof of Work and the long-tail of its
-probability distribution coupled with the EIP-1559 gas price update mechanism was resulting in users overpaying for gas.
+probability distribution coupled with the EIP-1559 gas price update mechanism had a noticeable impact in gas fees.
 With the transition to Proof of Stake block production became very consistent which almost completely eliminates the effect. 
 
 The Merge has allowed Ethereum to provide a better service for its users, more predictable and consistent cadence of 
 blocks while lowering fees.
 
-The title of this piece refers to the difference in the two probability distributions and their effects on gas prices.
+The title of this piece refers to the difference in the tails of the two probability distributions and their effects on gas prices.
 
 ## Code
 
