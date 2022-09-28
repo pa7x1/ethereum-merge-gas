@@ -52,9 +52,15 @@ proc writeBlocksToFile(fp: string, blockArray: JsonNode) =
 
 const firstPoSBlock = 15537394
 
-
+echo("Creating JSON file with Proof of Work data")
 let t0 = cpuTime()
-writeBlocksToFile("../../static/post_merge.json", loadAllJSONBlocks("../../static/block_data", greaterOrEqualThan=firstPoSBlock))
+writeBlocksToFile("../../static/pow.json", loadAllJSONBlocks("../../static/block_data", lessThan=firstPoSBlock))
 let t1 = cpuTime()
-
 echo(fmt"Execution time: {t1 - t0}")
+
+
+echo("Creating JSON file with Proof of Stake data")
+writeBlocksToFile("../../static/pos.json", loadAllJSONBlocks("../../static/block_data", greaterOrEqualThan=firstPoSBlock))
+let t2 = cpuTime()
+
+echo(fmt"Execution time: {t2 - t1}")
